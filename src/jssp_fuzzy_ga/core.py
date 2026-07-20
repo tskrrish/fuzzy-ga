@@ -73,3 +73,53 @@ def make_instance(name="ft06"):
     elif name == "ft10":
         return JSSPInstance(FT10_JOBS)
     raise ValueError(name)
+
+
+# ---------------------------------------------------------------------------
+# GA operators
+# ---------------------------------------------------------------------------
+
+def tournament_select(pop, fitness, rng, k=3):
+    idx = rng.integers(0, len(pop), size=k)
+    best = idx[0]
+    for i in idx[1:]:
+        if fitness[i] < fitness[best]:
+            best = i
+    return pop[best]
+
+
+def pox_crossover(p1, p2, n_jobs, rng):
+    """Precedence-preserving order-based crossover for operation-based encoding."""
+    jobs = np.arange(n_jobs)
+    rng.shuffle(jobs)
+    split = rng.integers(1, n_jobs) if n_jobs > 1 else 1
+    j1 = set(jobs[:split].tolist())
+
+    child = np.full_like(p1, -1)
+    for i, g in enumerate(p1):
+        if g in j1:
+            child[i] = g
+    fill_vals = [g for g in p2 if g not in j1]
+    fi = 0
+    for i in range(len(child)):
+        if child[i] == -1:
+            child[i] = fill_vals[fi]
+            fi += 1
+    return child
+
+
+def swap_mutation(chrom, rate, rng):
+    """Each pass, with probability `rate`, swap two random positions."""
+    c = chrom.copy()
+    if rng.random() < rate:
+        i, j = rng.integers(0, len(c), size=2)
+        c[i], c[j] = c[j], c[i]
+    return c
+
+
+def population_diversity(pop):
+    """Mean pairwise normalized Hamming distance across the population, in [0,1]."""
+    diffs = (pop[:, None, :] != pop[None, :, :]).sum(axis=2)
+    n = len(pop)
+    iu = np.triu_indices(n, k=1)
+    return float(diffs[iu].mean()) / pop.shape[1]

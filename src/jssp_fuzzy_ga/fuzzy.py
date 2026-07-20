@@ -62,3 +62,19 @@ def infer(diversity, stagnation_norm):
     mutation_rate = num / den if den > 0 else CONSEQUENT_VALUE["Medium"]
     fired.sort(key=lambda r: r["strength"], reverse=True)
     return mutation_rate, fired
+
+def explain(generation, diversity, stagnation_norm, mutation_rate, fired, top_k=2):
+    """Plain-language justification for this generation's mutation rate."""
+    parts = []
+    for r in fired[:top_k]:
+        if r["strength"] < 1e-3:
+            continue
+        parts.append(
+            f"diversity is {r['diversity_term']} ({r['diversity_deg']:.2f}) AND "
+            f"stagnation is {r['stagnation_term']} ({r['stagnation_deg']:.2f}) "
+            f"\u2192 mutation should be {r['consequent']} (rule strength {r['strength']:.2f})"
+        )
+    joined = "; also, ".join(parts) if parts else "no rule fired strongly"
+    return (f"Gen {generation}: mutation set to {mutation_rate:.3f} "
+            f"[raw diversity={diversity:.2f}, stagnation={stagnation_norm:.2f}] "
+            f"because {joined}.")

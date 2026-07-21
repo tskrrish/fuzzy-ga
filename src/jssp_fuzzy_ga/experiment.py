@@ -85,3 +85,12 @@ def run_ga(method, seed, instance="ft06", n_generations=150, record_trace=False)
     if record_trace:
         result["trace"] = trace
     return result
+
+def run_many(method, n_runs=15, seed0=1000, instance="ft06", n_generations=150):
+    curves = []
+    finals = []
+    for r in range(n_runs):
+        res = run_ga(method, seed=seed0 + r, instance=instance, n_generations=n_generations)
+        curves.append(res["best_curve"])
+        finals.append(res["final"])
+    return np.stack(curves), np.array(finals)

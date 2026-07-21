@@ -47,7 +47,7 @@ def plot_final_boxplot(data, instance="ft10", out_path="final_boxplot.png"):
     fig, ax = plt.subplots(figsize=(6, 4.5))
     methods = ["static", "crisp", "fuzzy"]
     box_data = [data[instance][m]["finals"] for m in methods]
-    bp = ax.boxplot(box_data, tick_labels=["Static", "Crisp-\nadaptive", "Fuzzy-\nadaptive"], patch_artist=True)
+    bp = ax.boxplot(box_data, labels=["Static", "Crisp-\nadaptive", "Fuzzy-\nadaptive"], patch_artist=True)
     for patch, method in zip(bp["boxes"], methods):
         patch.set_facecolor(COLORS[method])
         patch.set_alpha(0.5)

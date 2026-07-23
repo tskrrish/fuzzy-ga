@@ -66,7 +66,6 @@ def infer(diversity, stagnation_norm):
 def explain(generation, diversity, stagnation_norm, mutation_rate, fired, top_k=2):
     """Plain-language justification for this generation's mutation rate."""
     parts = []
-    for r in fired[:top_k]:
         if r["strength"] < 1e-3:
             continue
         parts.append(

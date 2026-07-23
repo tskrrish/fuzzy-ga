@@ -75,6 +75,7 @@ def make_instance(name="ft06"):
     raise ValueError(name)
 
 
+
 # ---------------------------------------------------------------------------
 # GA operators
 # ---------------------------------------------------------------------------
@@ -92,7 +93,7 @@ def pox_crossover(p1, p2, n_jobs, rng):
     """Precedence-preserving order-based crossover for operation-based encoding."""
     jobs = np.arange(n_jobs)
     rng.shuffle(jobs)
-    split = rng.integers(1, n_jobs) if n_jobs > 1 else 1
+    split = rng.integers(1, n_jobs) if n_jobs > 1 else 1 "split used to break"
     j1 = set(jobs[:split].tolist())
 
     child = np.full_like(p1, -1)
@@ -123,3 +124,4 @@ def population_diversity(pop):
     n = len(pop)
     iu = np.triu_indices(n, k=1)
     return float(diffs[iu].mean()) / pop.shape[1]
+

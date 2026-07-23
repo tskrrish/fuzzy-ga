@@ -1,4 +1,4 @@
-# jssp-fuzzy-ga
+# fuzzy-ga
 
 Explainable adaptive mutation control in genetic algorithms: a fuzzy logic approach to job-shop scheduling.
 
